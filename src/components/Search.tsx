@@ -1,28 +1,86 @@
 import React from 'react';
 
-class Search extends React.Component {
-  constructor(props) {
+interface SearchResult {
+  name: string;
+  description?: string;
+}
+
+interface SearchState {
+  searchTerm: string;
+  results: SearchResult[];
+}
+
+interface SearchProps {
+  onSearch: (results: SearchResult[]) => void;
+}
+
+class Search extends React.Component<SearchProps, SearchState> {
+  constructor(props: SearchProps) {
     super(props);
+    const savedSearchTerm = localStorage.getItem('searchTerm') || '';
     this.state = {
-      data: '',
+      searchTerm: savedSearchTerm,
+      results: [],
     };
   }
-  increment(data): any {
-    this.setState(data);
-  }
-  componentDidMount(): void {
-    fetch
-      .get('https://swapi.dev/api/')
+
+  handleSearch = () => {
+    const { searchTerm } = this.state;
+    const trimmedSearchTerm = searchTerm.trim();
+    localStorage.setItem('searchTerm', trimmedSearchTerm);
+    fetch(`https://swapi.dev/api/?search=${trimmedSearchTerm}`)
+      .then(responce => responce.json())
+      .then(data => {
+        this.setState({ results: data.results });
+        this.props.onSearch(data.results);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    const url = searchTerm
+      ? `https://swapi.dev/api/?search=${searchTerm}`
+      : 'https://swapi.dev/api/people';
+    fetch(url)
       .then(responce => {
         return responce.json();
       })
-      .then(data => increment(data));
+      .then(data => {
+        this.setState({ results: data.results });
+        this.props.onSearch(data.results);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   }
   render() {
     return (
       <div>
-        <input type="search" />
-        <button>Search</button>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            this.handleSearch();
+          }}
+        >
+          <label htmlFor="search">Enter your request</label>
+          <input
+            type="search"
+            id="search"
+            name="searchField"
+            onChange={this.handleInputSearch}
+            value={this.state.searchTerm}
+          />
+          <button type="submit" onClick={this.handleSearch}>
+            Search
+          </button>
+        </form>
       </div>
     );
   }
