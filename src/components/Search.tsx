@@ -28,9 +28,12 @@ class Search extends React.Component<SearchProps, SearchState> {
     const { searchTerm } = this.state;
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
-    fetch(`https://swapi.dev/api/?search=${trimmedSearchTerm}`)
-      .then(responce => responce.json())
+    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}`)
+      .then(responce => {
+        return responce.json();
+      })
       .then(data => {
+        console.dir(data);
         this.setState({ results: data.results });
         this.props.onSearch(data.results);
       })
@@ -46,13 +49,12 @@ class Search extends React.Component<SearchProps, SearchState> {
   componentDidMount() {
     const { searchTerm } = this.state;
     const url = searchTerm
-      ? `https://swapi.dev/api/?search=${searchTerm}`
-      : 'https://swapi.dev/api/people';
+      ? `https://swapi.dev/api/people/?search=${searchTerm}`
+      : `https://swapi.dev/api/people`;
     fetch(url)
-      .then(responce => {
-        return responce.json();
-      })
+      .then(responce => responce.json())
       .then(data => {
+        console.dir(data);
         this.setState({ results: data.results });
         this.props.onSearch(data.results);
       })
