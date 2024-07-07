@@ -4,11 +4,7 @@ import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import ErrorButton from './components/ErrorBoundary/ErrorButton';
-
-interface SearchResult {
-  name: string;
-  description?: string;
-}
+import { SearchResult } from './types';
 
 interface AppState {
   results: SearchResult[];
@@ -35,7 +31,7 @@ class App extends React.Component<EmptyObject, AppState> {
           <div className={style.search_section}>
             <Search onSearch={this.handleSearchResults} />
           </div>
-          <div className="results-section">
+          <div className={style.results_section}>
             <SearchInfo resultSearch={this.state.results} />
           </div>
           <ErrorButton />

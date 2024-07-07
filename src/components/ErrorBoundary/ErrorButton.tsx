@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './Button.module.css';
 
 class ErrorButton extends React.Component {
   throwError = () => {
@@ -6,7 +7,11 @@ class ErrorButton extends React.Component {
   };
 
   render() {
-    return <button onClick={this.throwError}>Throw Error</button>;
+    return (
+      <button className={style.search_button} onClick={this.throwError}>
+        try to destroy the galaxy
+      </button>
+    );
   }
 }
 

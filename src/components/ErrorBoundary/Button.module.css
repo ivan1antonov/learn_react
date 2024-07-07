@@ -6,11 +6,14 @@
   position: relative;
   padding: 9px 30px 10px 5px;
   border-radius: 10px;
+  display: block;
+  margin-top: 25px;
+  margin: 0 auto;
 }
 .search_button::after {
   position: absolute;
   content: '';
-  background: url('../../../assets/death-star.svg');
+  background: url('../../assets/death-star.svg');
   background-size: contain;
   background-repeat: no-repeat;
   width: 30px;
