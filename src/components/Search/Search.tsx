@@ -1,5 +1,8 @@
 import React from 'react';
 import style from './Search.module.css';
+import Label from './Label/Label';
+import Input from './Input/Input';
+import Button from './Button/Button';
 
 interface SearchResult {
   name: string;
@@ -34,7 +37,6 @@ class Search extends React.Component<SearchProps, SearchState> {
         return responce.json();
       })
       .then(data => {
-        console.dir(data);
         this.setState({ results: data.results });
         this.props.onSearch(data.results);
       })
@@ -55,7 +57,6 @@ class Search extends React.Component<SearchProps, SearchState> {
     fetch(url)
       .then(responce => responce.json())
       .then(data => {
-        console.dir(data);
         this.setState({ results: data.results });
         this.props.onSearch(data.results);
       })
@@ -73,21 +74,15 @@ class Search extends React.Component<SearchProps, SearchState> {
             this.handleSearch();
           }}
         >
-          <label className={style.search_label} htmlFor="search">
-            Enter your request
-          </label>
-          <input
-            className={style.search_input}
+          <Label htmlFor="search" />
+          <Input
             type="search"
             id="search"
             name="searchField"
             onChange={this.handleInputSearch}
             value={this.state.searchTerm}
-            placeholder="Enter your favorite person"
           />
-          <button className={style.search_button} type="submit" onClick={this.handleSearch}>
-            Find me him
-          </button>
+          <Button type="submit" onClick={this.handleSearch} />
         </form>
       </div>
     );
