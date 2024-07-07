@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import style from './App.module.css';
 import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
@@ -31,8 +31,8 @@ class App extends React.Component<EmptyObject, AppState> {
   render() {
     return (
       <ErrorBoundary>
-        <div className="app-container">
-          <div className="search-section">
+        <div className={style.app_container}>
+          <div className={style.search_section}>
             <Search onSearch={this.handleSearchResults} />
           </div>
           <div className="results-section">

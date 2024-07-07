@@ -1,0 +1,7 @@
+.app_container {
+  background: url('./assets/bg_starwars.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: calc(100vh - 20px);
+}

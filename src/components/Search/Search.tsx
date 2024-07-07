@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './Search.module.css';
 
 interface SearchResult {
   name: string;
@@ -66,21 +67,26 @@ class Search extends React.Component<SearchProps, SearchState> {
     return (
       <div>
         <form
+          className={style.search_form}
           onSubmit={e => {
             e.preventDefault();
             this.handleSearch();
           }}
         >
-          <label htmlFor="search">Enter your request</label>
+          <label className={style.search_label} htmlFor="search">
+            Enter your request
+          </label>
           <input
+            className={style.search_input}
             type="search"
             id="search"
             name="searchField"
             onChange={this.handleInputSearch}
             value={this.state.searchTerm}
+            placeholder="Enter your favorite person"
           />
-          <button type="submit" onClick={this.handleSearch}>
-            Search
+          <button className={style.search_button} type="submit" onClick={this.handleSearch}>
+            Find me him
           </button>
         </form>
       </div>
