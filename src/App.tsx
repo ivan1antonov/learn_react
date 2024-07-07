@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
-import Search from './components/Search';
-import SearchInfo from './components/SearchInfo';
+import Search from './components/Search/Search';
+import SearchInfo from './components/Search/SearchInfo';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import ErrorButton from './components/ErrorBoundary/ErrorButton';
 
 interface SearchResult {
   name: string;
@@ -28,14 +30,17 @@ class App extends React.Component<EmptyObject, AppState> {
 
   render() {
     return (
-      <div className="app-container">
-        <div className="search-section">
-          <Search onSearch={this.handleSearchResults} />
+      <ErrorBoundary>
+        <div className="app-container">
+          <div className="search-section">
+            <Search onSearch={this.handleSearchResults} />
+          </div>
+          <div className="results-section">
+            <SearchInfo resultSearch={this.state.results} />
+          </div>
+          <ErrorButton />
         </div>
-        <div className="results-section">
-          <SearchInfo resultSearch={this.state.results} />
-        </div>
-      </div>
+      </ErrorBoundary>
     );
   }
 }
