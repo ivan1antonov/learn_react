@@ -4,7 +4,15 @@ import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import ErrorButton from './components/ErrorBoundary/ErrorButton';
-import { SearchResult } from './types';
+// import { SearchResult } from './types';
+
+interface SearchResult {
+  name: string;
+  description?: string;
+  birth_year: string;
+  gender: string;
+  skin_color: string;
+}
 
 interface AppState {
   results: SearchResult[];

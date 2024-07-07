@@ -3,7 +3,15 @@ import style from './Search.module.css';
 import Label from './Label/Label';
 import Input from './Input/Input';
 import Button from './Button/Button';
-import { SearchResult } from '../../types';
+// import { SearchResult } from '../../types';
+
+interface SearchResult {
+  name: string;
+  description?: string;
+  birth_year: string;
+  gender: string;
+  skin_color: string;
+}
 
 interface SearchState {
   searchTerm: string;
