@@ -1,31 +1,43 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import React from 'react';
 import './App.css';
+import Search from './components/Search';
+import SearchInfo from './components/SearchInfo';
 
-function App() {
-  const [count, setCount] = useState(0);
+interface SearchResult {
+  name: string;
+  description?: string;
+}
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+interface AppState {
+  results: SearchResult[];
+}
+
+type EmptyObject = Record<string, never>;
+
+class App extends React.Component<EmptyObject, AppState> {
+  constructor(props: EmptyObject) {
+    super(props);
+    this.state = {
+      results: [],
+    };
+  }
+
+  handleSearchResults = (results: SearchResult[]) => {
+    this.setState({ results });
+  };
+
+  render() {
+    return (
+      <div className="app-container">
+        <div className="search-section">
+          <Search onSearch={this.handleSearchResults} />
+        </div>
+        <div className="results-section">
+          <SearchInfo resultSearch={this.state.results} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount(count => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
-  );
+    );
+  }
 }
 
 export default App;
