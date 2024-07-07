@@ -1,0 +1,7 @@
+.search_form {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
