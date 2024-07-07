@@ -1,0 +1,13 @@
+.search_input {
+  border-radius: 8px;
+  border: 1px solid #000;
+  padding: 10px 5px;
+  width: 300px;
+  margin: 0 20px;
+}
+.search_input::placeholder {
+  font-family: 'Codystar';
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}

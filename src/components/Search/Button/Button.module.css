@@ -1,0 +1,21 @@
+.search_button {
+  font-style: italic;
+  background-color: #fff;
+  color: #000;
+  font-size: 15px;
+  position: relative;
+  padding: 9px 30px 10px 5px;
+  border-radius: 10px;
+}
+.search_button::after {
+  position: absolute;
+  content: '';
+  background: url('../../../assets/death-star.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
