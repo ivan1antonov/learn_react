@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './Search.module.css';
 import Label from './Label/Label';
 import Input from './Input/Input';
 import Button from './Button/Button';
-// import { SearchResult } from '../../types';
 
 interface SearchResult {
   name: string;
@@ -13,27 +12,15 @@ interface SearchResult {
   skin_color: string;
 }
 
-interface SearchState {
-  searchTerm: string;
-  results: SearchResult[];
-}
-
 interface SearchProps {
   onSearch: (results: SearchResult[]) => void;
 }
 
-class Search extends React.Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    const savedSearchTerm = localStorage.getItem('searchTerm') || '';
-    this.state = {
-      searchTerm: savedSearchTerm,
-      results: [],
-    };
-  }
+const Search: React.FC<SearchProps> = (props: SearchProps) => {
+  const savedSearchTerm = localStorage.getItem('searchTerm') || '';
+  const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
 
-  handleSearch = () => {
-    const { searchTerm } = this.state;
+  const handleSearch = () => {
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
     fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}`)
@@ -41,56 +28,51 @@ class Search extends React.Component<SearchProps, SearchState> {
         return responce.json();
       })
       .then(data => {
-        this.setState({ results: data.results });
-        this.props.onSearch(data.results);
+        props.onSearch(data.results);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   };
 
-  handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value });
+  const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
-  componentDidMount() {
-    const { searchTerm } = this.state;
-    const url = searchTerm
-      ? `https://swapi.dev/api/people/?search=${searchTerm}`
+  useEffect(() => {
+    const url = savedSearchTerm
+      ? `https://swapi.dev/api/people/?search=${savedSearchTerm}`
       : `https://swapi.dev/api/people`;
     fetch(url)
       .then(responce => responce.json())
       .then(data => {
-        this.setState({ results: data.results });
-        this.props.onSearch(data.results);
+        props.onSearch(data.results);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }
-  render() {
-    return (
-      <div>
-        <form
-          className={style.search_form}
-          onSubmit={e => {
-            e.preventDefault();
-            this.handleSearch();
-          }}
-        >
-          <Label htmlFor="search" />
-          <Input
-            type="search"
-            id="search"
-            name="searchField"
-            onChange={this.handleInputSearch}
-            value={this.state.searchTerm}
-          />
-          <Button type="submit" onClick={this.handleSearch} />
-        </form>
-      </div>
-    );
-  }
-}
+  }, [savedSearchTerm, props]);
+  return (
+    <div>
+      <form
+        className={style.search_form}
+        onSubmit={e => {
+          e.preventDefault();
+          handleSearch();
+        }}
+      >
+        <Label htmlFor="search" />
+        <Input
+          type="search"
+          id="search"
+          name="searchField"
+          onChange={handleInputSearch}
+          value={searchTerm}
+        />
+        <Button type="submit" onClick={handleSearch} />
+      </form>
+    </div>
+  );
+};
 
 export default Search;

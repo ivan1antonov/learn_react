@@ -5,15 +5,12 @@ interface LabelProps {
   htmlFor: string;
 }
 
-class Label extends React.Component<LabelProps> {
-  render() {
-    const { htmlFor } = this.props;
-    return (
-      <label className={style.search_label} htmlFor={htmlFor}>
-        Enter your request
-      </label>
-    );
-  }
-}
+const Label: React.FC<LabelProps> = ({ htmlFor }) => {
+  return (
+    <label className={style.search_label} htmlFor={htmlFor}>
+      Enter your request
+    </label>
+  );
+};
 
 export default Label;
