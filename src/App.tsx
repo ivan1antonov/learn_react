@@ -4,7 +4,6 @@ import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import ErrorButton from './components/ErrorBoundary/ErrorButton';
-// import { SearchResult } from './types';
 
 interface SearchResult {
   name: string;
