@@ -16,7 +16,7 @@ interface SearchProps {
   onSearch: (results: SearchResult[]) => void;
 }
 
-const Search: React.FC<SearchProps> = (props: SearchProps) => {
+const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const savedSearchTerm = localStorage.getItem('searchTerm') || '';
   const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
 
@@ -28,7 +28,7 @@ const Search: React.FC<SearchProps> = (props: SearchProps) => {
         return responce.json();
       })
       .then(data => {
-        props.onSearch(data.results);
+        onSearch(data.results);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -46,12 +46,12 @@ const Search: React.FC<SearchProps> = (props: SearchProps) => {
     fetch(url)
       .then(responce => responce.json())
       .then(data => {
-        props.onSearch(data.results);
+        onSearch(data.results);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }, [savedSearchTerm, props]);
+  }, [savedSearchTerm, onSearch]);
   return (
     <div>
       <form
