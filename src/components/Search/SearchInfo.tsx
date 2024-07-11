@@ -13,25 +13,23 @@ interface SearchInfoProps {
   resultSearch: SearchResult[];
 }
 
-class SearchInfo extends React.Component<SearchInfoProps> {
-  static defaultProps = {
-    resultSearch: [],
-  };
-
-  render() {
-    return (
-      <div className={style.searchinfo}>
-        {this.props.resultSearch.map((el, index) => (
+const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch }) => {
+  return (
+    <div className={style.searchinfo}>
+      {resultSearch && resultSearch.length > 0 ? (
+        resultSearch.map((el, index) => (
           <div className={style.searchinfo_item} key={index}>
             <h3>{el.name}</h3>
             <p>birth year: {el.birth_year}</p>
             <p>gender: {el.gender}</p>
             <p>skin color: {el.skin_color}</p>
           </div>
-        ))}
-      </div>
-    );
-  }
-}
+        ))
+      ) : (
+        <div></div>
+      )}
+    </div>
+  );
+};
 
 export default SearchInfo;
