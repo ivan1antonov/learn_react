@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './SearchInfo.module.css';
+import SearchItem from './SearchItem/SearchItem';
 
 interface SearchResult {
   name: string;
@@ -15,20 +15,13 @@ interface SearchInfoProps {
 
 const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch }) => {
   return (
-    <div className={style.searchinfo}>
+    <>
       {resultSearch && resultSearch.length > 0 ? (
-        resultSearch.map((el, index) => (
-          <div className={style.searchinfo_item} key={index}>
-            <h3>{el.name}</h3>
-            <p>birth year: {el.birth_year}</p>
-            <p>gender: {el.gender}</p>
-            <p>skin color: {el.skin_color}</p>
-          </div>
-        ))
+        <SearchItem resultSearch={resultSearch} />
       ) : (
         <div></div>
       )}
-    </div>
+    </>
   );
 };
 

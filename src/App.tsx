@@ -3,7 +3,6 @@ import style from './App.module.css';
 import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import ErrorButton from './components/ErrorBoundary/ErrorButton';
 
 interface SearchResult {
   name: string;
@@ -15,7 +14,6 @@ interface SearchResult {
 
 const App: React.FC = () => {
   const [results, setResults] = useState<SearchResult[]>([]);
-
   const handleSearchResults = (results: SearchResult[]) => {
     setResults(results);
   };
@@ -29,7 +27,6 @@ const App: React.FC = () => {
         <div className={style.results_section}>
           <SearchInfo resultSearch={results} />
         </div>
-        <ErrorButton />
       </div>
     </ErrorBoundary>
   );
