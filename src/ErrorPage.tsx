@@ -20,13 +20,15 @@ export default function ErrorPage() {
   }
 
   return (
-    <div id="error-page">
+    <div className="error-page">
       <h1>Oops!</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
-      <img src={errorImage} alt="picture_fake" />
+      <div className="error-image">
+        <img src={errorImage} alt="picture_fake" />
+      </div>
     </div>
   );
 }

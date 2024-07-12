@@ -1,5 +1,7 @@
 import React from 'react';
 import SearchItem from './SearchItem/SearchItem';
+import loader from '../../assets/loader.gif';
+import style from './SearchInfo.module.css';
 
 interface SearchResult {
   name: string;
@@ -11,15 +13,20 @@ interface SearchResult {
 
 interface SearchInfoProps {
   resultSearch: SearchResult[];
+  isLoading: boolean;
 }
 
-const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch }) => {
+const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch, isLoading }) => {
   return (
     <>
-      {resultSearch && resultSearch.length > 0 ? (
+      {isLoading ? (
+        <div className={style.loader}>
+          <img className={style.loader_img} src={loader} alt="loading" />
+        </div>
+      ) : resultSearch && resultSearch.length > 0 ? (
         <SearchItem resultSearch={resultSearch} />
       ) : (
-        <div></div>
+        <div>No results found</div>
       )}
     </>
   );
