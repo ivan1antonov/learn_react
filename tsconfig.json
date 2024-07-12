@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["jest", "node"]
   },
   "files": [],
   "references": [

@@ -24,20 +24,16 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading }) => {
   const handleSearch = useCallback(() => {
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
-    console.log('Starting search with term:', trimmedSearchTerm);
     setLoading(true);
     fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}`)
       .then(response => {
-        console.log('Fetch response received');
         return response.json();
       })
       .then(data => {
-        console.log('Data parsed:', data);
         onSearch(data.results);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch(() => {
         setLoading(false);
       });
   }, [searchTerm, onSearch, setLoading]);
@@ -50,20 +46,16 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading }) => {
     const url = savedSearchTerm
       ? `https://swapi.dev/api/people/?search=${savedSearchTerm}`
       : `https://swapi.dev/api/people`;
-    console.log('Initial fetch with URL:', url);
     setLoading(true);
     fetch(url)
       .then(response => {
-        console.log('Initial fetch response received');
         return response.json();
       })
       .then(data => {
-        console.log('Initial data parsed:', data);
         onSearch(data.results);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching initial data:', error);
+      .catch(() => {
         setLoading(false);
       });
   }, [savedSearchTerm, onSearch, setLoading]);
