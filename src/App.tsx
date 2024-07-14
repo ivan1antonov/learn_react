@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import style from './App.module.css';
 import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
@@ -13,9 +14,11 @@ interface SearchResult {
 }
 
 const App: React.FC = () => {
+  const { page } = useParams<{ page?: string }>();
+  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(Number(page) || 1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const handleSearchResults = useCallback((results: SearchResult[], pages: number) => {
@@ -30,7 +33,14 @@ const App: React.FC = () => {
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  }, []);
+    navigate(`/search/${page}`);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (page) {
+      setCurrentPage(Number(page));
+    }
+  }, [page]);
 
   return (
     <ErrorBoundary>

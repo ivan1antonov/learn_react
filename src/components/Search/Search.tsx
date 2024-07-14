@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import style from './Search.module.css';
 import Label from './Label/Label';
 import Input from './Input/Input';
@@ -20,6 +21,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) => {
+  const navigate = useNavigate();
   const savedSearchTerm = localStorage.getItem('searchTerm') || '';
   const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
 
@@ -27,7 +29,8 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) =>
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
     setLoading(true);
-    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=${currentPage}`)
+    navigate(`/search/1`);
+    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=1`)
       .then(response => response.json())
       .then(data => {
         onSearch(data.results, Math.ceil(data.count / 10));
@@ -36,7 +39,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) =>
       .catch(() => {
         setLoading(false);
       });
-  }, [searchTerm, currentPage, onSearch, setLoading]);
+  }, [searchTerm, navigate, onSearch, setLoading]);
 
   const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
