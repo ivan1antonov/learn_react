@@ -20,7 +20,7 @@ interface SearchProps {
   onPageChange: (page: number) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) => {
+const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPageChange }) => {
   const navigate = useNavigate();
   const savedSearchTerm = localStorage.getItem('searchTerm') || '';
   const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
@@ -29,17 +29,18 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) =>
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
     setLoading(true);
-    navigate(`/search/1`);
-    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=1`)
+    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=${1}`)
       .then(response => response.json())
       .then(data => {
         onSearch(data.results, Math.ceil(data.count / 10));
         setLoading(false);
+        onPageChange(1);
+        navigate(`/search/1`);
       })
       .catch(() => {
         setLoading(false);
       });
-  }, [searchTerm, navigate, onSearch, setLoading]);
+  }, [searchTerm, onSearch, setLoading, onPageChange, navigate]);
 
   const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
