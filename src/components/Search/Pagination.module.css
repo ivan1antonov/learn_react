@@ -3,3 +3,13 @@
   justify-content: center;
   align-items: center;
 }
+.page_link + .page_link{
+  margin-left: 15px;
+}
+.page_link{
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background-color: transparent;
+  color: #fff;
+}

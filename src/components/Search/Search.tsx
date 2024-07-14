@@ -19,7 +19,7 @@ interface SearchProps {
   onPageChange: (page: number) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPageChange }) => {
+const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage }) => {
   const savedSearchTerm = localStorage.getItem('searchTerm') || '';
   const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
 
