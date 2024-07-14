@@ -13,11 +13,13 @@ interface SearchResult {
 }
 
 interface SearchProps {
-  onSearch: (results: SearchResult[]) => void;
+  onSearch: (results: SearchResult[], totalPages: number) => void;
   setLoading: (loading: boolean) => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch, setLoading }) => {
+const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPageChange }) => {
   const savedSearchTerm = localStorage.getItem('searchTerm') || '';
   const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
 
@@ -25,18 +27,16 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading }) => {
     const trimmedSearchTerm = searchTerm.trim();
     localStorage.setItem('searchTerm', trimmedSearchTerm);
     setLoading(true);
-    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}`)
-      .then(response => {
-        return response.json();
-      })
+    fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=${currentPage}`)
+      .then(response => response.json())
       .then(data => {
-        onSearch(data.results);
+        onSearch(data.results, Math.ceil(data.count / 10));
         setLoading(false);
       })
       .catch(() => {
         setLoading(false);
       });
-  }, [searchTerm, onSearch, setLoading]);
+  }, [searchTerm, currentPage, onSearch, setLoading]);
 
   const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -44,21 +44,19 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading }) => {
 
   useEffect(() => {
     const url = savedSearchTerm
-      ? `https://swapi.dev/api/people/?search=${savedSearchTerm}`
-      : `https://swapi.dev/api/people`;
+      ? `https://swapi.dev/api/people/?search=${savedSearchTerm}&page=${currentPage}`
+      : `https://swapi.dev/api/people/?page=${currentPage}`;
     setLoading(true);
     fetch(url)
-      .then(response => {
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
-        onSearch(data.results);
+        onSearch(data.results, Math.ceil(data.count / 10));
         setLoading(false);
       })
       .catch(() => {
         setLoading(false);
       });
-  }, [savedSearchTerm, onSearch, setLoading]);
+  }, [savedSearchTerm, currentPage, onSearch, setLoading]);
 
   return (
     <div>

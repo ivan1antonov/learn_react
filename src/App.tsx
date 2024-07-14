@@ -13,25 +13,44 @@ interface SearchResult {
 }
 
 const App: React.FC = () => {
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  const handleSearchResults = useCallback((results: SearchResult[]) => {
-    setResults(results);
+  const handleSearchResults = useCallback((results: SearchResult[], pages: number) => {
+    setSearchResults(results);
+    setTotalPages(pages);
+    setIsLoading(false);
   }, []);
 
   const handleLoadingState = useCallback((loading: boolean) => {
-    setLoading(loading);
+    setIsLoading(loading);
+  }, []);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
   }, []);
 
   return (
     <ErrorBoundary>
       <div className={style.app_container}>
         <div className={style.search_section}>
-          <Search onSearch={handleSearchResults} setLoading={handleLoadingState} />
+          <Search
+            onSearch={handleSearchResults}
+            setLoading={handleLoadingState}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
         <div className={style.results_section}>
-          <SearchInfo resultSearch={results} isLoading={loading} />
+          <SearchInfo
+            resultSearch={searchResults}
+            isLoading={isLoading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </ErrorBoundary>
