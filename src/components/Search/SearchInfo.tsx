@@ -6,9 +6,12 @@ import Pagination from './Pagination';
 
 interface SearchResult {
   name: string;
-  description?: string;
   birth_year: string;
+  eye_color: string;
   gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
   skin_color: string;
 }
 
@@ -18,9 +21,17 @@ interface SearchInfoProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onDetailClick: (id: string) => void;
 }
 
-const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch, isLoading, currentPage, totalPages, onPageChange }) => {
+const SearchInfo: React.FC<SearchInfoProps> = ({
+  resultSearch,
+  isLoading,
+  currentPage,
+  totalPages,
+  onPageChange,
+  onDetailClick,
+}) => {
   return (
     <>
       {isLoading ? (
@@ -29,7 +40,7 @@ const SearchInfo: React.FC<SearchInfoProps> = ({ resultSearch, isLoading, curren
         </div>
       ) : resultSearch && resultSearch.length > 0 ? (
         <>
-          <SearchItem resultSearch={resultSearch} />
+          <SearchItem resultSearch={resultSearch} onDetailClick={onDetailClick} />
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
         </>
       ) : (

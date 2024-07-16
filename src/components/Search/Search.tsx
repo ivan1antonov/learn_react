@@ -7,9 +7,12 @@ import Button from './Button/Button';
 
 interface SearchResult {
   name: string;
-  description?: string;
   birth_year: string;
+  eye_color: string;
   gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
   skin_color: string;
 }
 
@@ -35,7 +38,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPa
         onSearch(data.results, Math.ceil(data.count / 10));
         setLoading(false);
         onPageChange(1);
-        navigate(`/search/1`);
+        navigate(`/page/1`);
       })
       .catch(() => {
         setLoading(false);

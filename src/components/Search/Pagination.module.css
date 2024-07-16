@@ -2,6 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 20px;
 }
 .page_link + .page_link{
   margin-left: 15px;

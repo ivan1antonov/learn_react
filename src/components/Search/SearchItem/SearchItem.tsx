@@ -3,31 +3,33 @@ import style from './SearchItem.module.css';
 
 interface SearchResult {
   name: string;
-  description?: string;
   birth_year: string;
+  eye_color: string;
   gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
   skin_color: string;
 }
 
-interface SearchInfoProps {
+interface SearchItemProps {
   resultSearch: SearchResult[];
+  onDetailClick: (id: string) => void;
 }
 
-const SearchInfoItem: React.FC<SearchInfoProps> = ({ resultSearch }) => {
+const SearchItem: React.FC<SearchItemProps> = ({ resultSearch, onDetailClick }) => {
   return (
-    <div>
-      <div className={style.searchinfo}>
-        {resultSearch.map((el, index) => (
-          <div className={style.searchinfo_item} key={index}>
-            <h3>{el.name}</h3>
-            <p>birth year: {el.birth_year}</p>
-            <p>gender: {el.gender}</p>
-            <p>skin color: {el.skin_color}</p>
-          </div>
-        ))}
-      </div>
+    <div className={style.searchinfo}>
+      {resultSearch.map((el, index) => (
+        <div key={index} className={style.searchinfo_item} onClick={() => onDetailClick(el.name)}>
+          <h3>{el.name}</h3>
+          <p>birth year: {el.birth_year}</p>
+          <p>gender: {el.gender}</p>
+          <p>skin color: {el.skin_color}</p>
+        </div>
+      ))}
     </div>
   );
 };
 
-export default SearchInfoItem;
+export default SearchItem;

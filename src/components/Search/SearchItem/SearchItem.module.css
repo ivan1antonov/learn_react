@@ -4,6 +4,8 @@
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 30px;
+  padding-bottom: 40px;
+  order: -1;
 }
 .searchinfo_item {
   border: 1px solid #fff;
@@ -14,4 +16,8 @@
   justify-content: center;
   flex-direction: column;
   width: 250px;
+  padding-bottom: 20px;
+}
+.searchinfo_item p {
+  margin: 0;
 }

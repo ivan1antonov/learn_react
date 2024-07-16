@@ -3,5 +3,14 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  height: calc(100vh - 20px);
+}
+
+.results_section {
+  display: flex;
+  position: relative;
+}
+
+.detail_section {
+padding: 10px;
+order: -1;
 }

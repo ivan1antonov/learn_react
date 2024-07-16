@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Outlet, useParams, useNavigate } from 'react-router-dom';
 import style from './App.module.css';
 import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
@@ -7,9 +7,12 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 interface SearchResult {
   name: string;
-  description?: string;
   birth_year: string;
+  eye_color: string;
   gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
   skin_color: string;
 }
 
@@ -18,6 +21,8 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const detailRef = useRef<HTMLDivElement>(null);
   const { page } = useParams<{ page: string }>();
   const navigate = useNavigate();
 
@@ -38,8 +43,33 @@ const App: React.FC = () => {
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-    navigate(`/search/${page}`);
+    navigate(`/page/${page}`);
   }, [navigate]);
+
+  const handleDetailClick = useCallback((id: string) => {
+    const selectedResult = searchResults.find(result => result.name === id);
+    if (selectedResult) {
+      navigate(`/detail/${id}`, { state: { detail: selectedResult } });
+      setShowDetail(true);
+    }
+  }, [navigate, searchResults]);
+
+  const handleOutsideClick = useCallback((event: MouseEvent) => {
+    if (detailRef.current && !detailRef.current.contains(event.target as Node)) {
+      setShowDetail(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showDetail) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [showDetail, handleOutsideClick]);
 
   return (
     <ErrorBoundary>
@@ -59,7 +89,13 @@ const App: React.FC = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            onDetailClick={handleDetailClick}
           />
+          {showDetail && (
+            <div className={style.detail_section} ref={detailRef}>
+              <Outlet />
+            </div>
+          )}
         </div>
       </div>
     </ErrorBoundary>
