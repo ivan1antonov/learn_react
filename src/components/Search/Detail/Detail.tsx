@@ -16,6 +16,7 @@ interface SearchResult {
 const Detail: React.FC = () => {
   const location = useLocation();
   const detail = location.state?.detail as SearchResult | null;
+  
 
   return detail ? (
     <div className={style.detail_overlay}>

@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Outlet, useParams, useNavigate } from 'react-router-dom';
+import OutsideClickHandler from 'react-outside-click-handler';
 import style from './App.module.css';
 import Search from './components/Search/Search';
 import SearchInfo from './components/Search/SearchInfo';
@@ -22,7 +23,6 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [showDetail, setShowDetail] = useState<boolean>(false);
-  const detailRef = useRef<HTMLDivElement>(null);
   const { page } = useParams<{ page: string }>();
   const navigate = useNavigate();
 
@@ -54,23 +54,6 @@ const App: React.FC = () => {
     }
   }, [navigate, searchResults]);
 
-  const handleOutsideClick = useCallback((event: MouseEvent) => {
-    if (detailRef.current && !detailRef.current.contains(event.target as Node)) {
-      setShowDetail(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (showDetail) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    } else {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [showDetail, handleOutsideClick]);
-
   return (
     <ErrorBoundary>
       <div className={style.app_container}>
@@ -92,9 +75,11 @@ const App: React.FC = () => {
             onDetailClick={handleDetailClick}
           />
           {showDetail && (
-            <div className={style.detail_section} ref={detailRef}>
-              <Outlet />
-            </div>
+            <OutsideClickHandler onOutsideClick={() => setShowDetail(false)}>
+              <div className={style.detail_section}>
+                <Outlet />
+              </div>
+            </OutsideClickHandler>
           )}
         </div>
       </div>
