@@ -1,35 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useCallback, useEffect } from 'react';
+import { Outlet, useParams, useNavigate } from 'react-router-dom';
+import OutsideClickHandler from 'react-outside-click-handler';
+import style from './App.module.css';
+import Search from './components/Search/Search';
+import SearchInfo from './components/Search/SearchInfo';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface SearchResult {
+  name: string;
+  birth_year: string;
+  eye_color: string;
+  gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
+  skin_color: string;
 }
 
-export default App
+const App: React.FC = () => {
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const { page } = useParams<{ page: string }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pageNumber = page ? parseInt(page, 10) : 1;
+    setCurrentPage(pageNumber);
+  }, [page]);
+
+  const handleSearchResults = useCallback((results: SearchResult[], pages: number) => {
+    setSearchResults(results);
+    setTotalPages(pages);
+    setIsLoading(false);
+  }, []);
+
+  const handleLoadingState = useCallback((loading: boolean) => {
+    setIsLoading(loading);
+  }, []);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    navigate(`/page/${page}`);
+  }, [navigate]);
+
+  const handleDetailClick = useCallback((id: string) => {
+    const selectedResult = searchResults.find(result => result.name === id);
+    if (selectedResult) {
+      navigate(`/detail/${id}`, { state: { detail: selectedResult } });
+      setShowDetail(true);
+    }
+  }, [navigate, searchResults]);
+
+  return (
+    <ErrorBoundary>
+      <div className={style.app_container}>
+        <div className={style.search_section}>
+          <Search
+            onSearch={handleSearchResults}
+            setLoading={handleLoadingState}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
+        <div className={style.results_section}>
+          <SearchInfo
+            resultSearch={searchResults}
+            isLoading={isLoading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            onDetailClick={handleDetailClick}
+          />
+          {showDetail && (
+            <OutsideClickHandler onOutsideClick={() => setShowDetail(false)}>
+              <div className={style.detail_section}>
+                <Outlet />
+              </div>
+            </OutsideClickHandler>
+          )}
+        </div>
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default App;
