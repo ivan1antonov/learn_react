@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import style from './Search.module.css';
 import Label from './Label/Label';
 import Input from './Input/Input';
 import Button from './Button/Button';
+import useSearchQuery from '../hooks/useSearchQuery';
 
 interface SearchResult {
   name: string;
@@ -25,12 +26,10 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPageChange }) => {
   const navigate = useNavigate();
-  const savedSearchTerm = localStorage.getItem('searchTerm') || '';
-  const [searchTerm, setSearchTerm] = useState<string>(savedSearchTerm);
+  const [searchTerm, setSearchTerm] = useSearchQuery();
 
   const handleSearch = useCallback(() => {
     const trimmedSearchTerm = searchTerm.trim();
-    localStorage.setItem('searchTerm', trimmedSearchTerm);
     setLoading(true);
     fetch(`https://swapi.dev/api/people/?search=${trimmedSearchTerm}&page=${1}`)
       .then(response => response.json())
@@ -50,8 +49,8 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPa
   };
 
   useEffect(() => {
-    const url = savedSearchTerm
-      ? `https://swapi.dev/api/people/?search=${savedSearchTerm}&page=${currentPage}`
+    const url = searchTerm
+      ? `https://swapi.dev/api/people/?search=${searchTerm}&page=${currentPage}`
       : `https://swapi.dev/api/people/?page=${currentPage}`;
     setLoading(true);
     fetch(url)
@@ -63,7 +62,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, setLoading, currentPage, onPa
       .catch(() => {
         setLoading(false);
       });
-  }, [savedSearchTerm, currentPage, onSearch, setLoading]);
+  }, [searchTerm, currentPage, onSearch, setLoading]);
 
   return (
     <div>
